@@ -1,0 +1,31 @@
+ /* Modal & backdrop keyframes */
+ @keyframes modalAppear {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0); }
+  }
+  @keyframes backdropAppear {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  /* Body flex container */
+  body { font-family:'Poppins',sans-serif; scroll-behavior:smooth; }
+  header { transition: background-color .3s, opacity .3s; }
+  [x-cloak] { display:none !important; }
+  /* Glass & gradient-border utilities */
+  .glass-effect { backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  .gradient-border { background:linear-gradient(45deg,#F4D03F,#B8E0F5); padding:2px; border-radius:12px; }
+  .gradient-border > div { background:white; border-radius:10px; }
+  @keyframes float {
+0%, 100% { transform: translateY(0); }
+50%       { transform: translateY(-10px); }
+}
+
+@keyframes slideUp {
+from { transform: translateY(20px); opacity: 0; }
+to   { transform: translateY(0);     opacity: 1; }
+}
+
+@keyframes fadeIn {
+from { opacity: 0; }
+to   { opacity: 1; }
+}
