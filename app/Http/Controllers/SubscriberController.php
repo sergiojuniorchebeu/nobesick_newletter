@@ -7,6 +7,12 @@ use App\Models\Subscriber;
 
 class SubscriberController extends Controller
 {
+    public function index()
+    {
+        $subscribers = Subscriber::orderBy('created_at', 'desc')->get(); 
+        return view('dashboard', compact('subscribers'));
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([

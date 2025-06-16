@@ -34,3 +34,8 @@ Route::get('/dashboard', [AuthController::class, 'dashboard'])
 // Newsletter subscription
 Route::post('/subscribe', [SubscriberController::class, 'store'])
      ->name('subscribe');
+          
+Route::middleware(['auth'])->group(function () {
+        Route::get('/dashboard', [SubscriberController::class, 'index'])->name('dashboard');
+        Route::post('/subscribers', [SubscriberController::class, 'store'])->name('subscribe');
+    });
