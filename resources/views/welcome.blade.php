@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" x-data="{ showLoginModal: false }">
+<html lang="fr" x-data="{ showLoginModal: false, showRegisterModal: false }">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -37,29 +37,11 @@
   </script>
 
   <style>
-    /* Modal & backdrop keyframes */
-    @keyframes modalAppear {
-      from { opacity: 0; transform: scale(0.95) translateY(-10px); }
-      to   { opacity: 1; transform: scale(1)    translateY(0); }
-    }
-    @keyframes backdropAppear {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    /* Core keyframes */
-    @keyframes float {
-      0%,100% { transform: translateY(0); }
-      50%     { transform: translateY(-10px); }
-    }
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to   { transform: translateY(0);     opacity: 1; }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    /* Utilities */
+    @keyframes modalAppear { from {opacity:0;transform:scale(.95) translateY(-10px);} to {opacity:1;transform:scale(1) translateY(0);} }
+    @keyframes backdropAppear { from {opacity:0;} to {opacity:1;} }
+    @keyframes float {0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+    @keyframes slideUp {from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+    @keyframes fadeIn {from{opacity:0;}to{opacity:1;}}
     body { font-family:'Poppins',sans-serif; scroll-behavior:smooth; }
     header { transition: background-color .3s, opacity .3s; }
     [x-cloak] { display:none !important; }
@@ -70,9 +52,33 @@
 
   <!-- Alpine.js -->
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Registration form logic -->
+  <script>
+    function registrationForm() {
+      return {
+        name: '', email: '', password: '', password_confirmation: '',
+        errors: {}, success: false,
+        register() {
+          this.errors = {}; this.success = false;
+          if (!this.name) this.errors.name = 'Nom requis';
+          if (!this.email) this.errors.email = 'Email requis';
+          else if (!/.+@.+\..+/.test(this.email)) this.errors.email = 'Format email invalide';
+          if (!this.password) this.errors.password = 'Mot de passe requis';
+          if (this.password && this.password_confirmation !== this.password) {
+            this.errors.password_confirmation = 'Les mots de passe ne correspondent pas';
+          }
+          if (Object.keys(this.errors).length === 0) {
+            // ici appelez votre backend via fetch/Axios puis en cas de succès :
+            this.success = true;
+          }
+        }
+      }
+    }
+  </script>
 </head>
 
 <body class="flex flex-col min-h-screen bg-gradient-to-br from-pastel-blue via-blue-50 to-soft-blue font-poppins">
+
   <!-- Header -->
   <header class="fixed top-0 w-full z-50 glass-effect bg-white/80 shadow-sm">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
@@ -85,7 +91,8 @@
         <a href="#about"      class="text-gray-600 hover:text-mustard font-medium">À propos</a>
         <a href="#contact"    class="text-gray-600 hover:text-mustard font-medium">Contact</a>
         <button @click="showLoginModal = true" class="text-gray-600 hover:text-mustard font-medium">Connexion</button>
-      </div>
+        <!--<button @click="showRegisterModal = true" class="text-gray-600 hover:text-mustard font-medium">Inscription</button>
+      </div>-->
       <!-- Mobile menu -->
       <div class="md:hidden" x-data="{ mobileMenuOpen: false }">
         <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-600 hover:text-mustard">
@@ -101,6 +108,8 @@
           <a href="#contact"    class="block text-gray-600 hover:text-mustard font-medium">Contact</a>
           <button @click="showLoginModal = true; mobileMenuOpen = false"
                   class="block w-full text-left text-gray-600 hover:text-mustard font-medium">Connexion</button>
+          <!--<button @click="showRegisterModal = true; mobileMenuOpen = false"
+                  class="block w-full text-left text-gray-600 hover:text-mustard font-medium">Inscription</button>-->
         </div>
       </div>
     </nav>
@@ -149,56 +158,106 @@
         <h2 class="text-2xl font-bold text-gray-800 mb-2">Connexion Admin</h2>
         <p class="text-gray-600">Accédez à votre espace d'administration</p>
       </div>
-      <form @submit.prevent="login()" class="space-y-6">
+      <form action="{{ route('login.submit') }}" method="POST" class="space-y-6">
+        @csrf
+      
         <div>
-          <label for="modal-email" class="block text-sm font-medium text-gray-700 mb-2">Adresse email</label>
-          <div class="relative">
-            <input id="modal-email" type="email" x-model="email" placeholder="admin@nobesick.com"
-                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-soft-blue transition"
-                   :class="errors.email ? 'border-red-300 focus:ring-red-200' : ''"/>
-            <p x-show="errors.email" x-text="errors.email" class="text-red-600 text-sm mt-1"></p>
-          </div>
+          <label for="modal-email">Adresse email</label>
+          <input id="modal-email" name="email" type="email" required
+                 class="w-full px-4 py-3 border rounded-xl"
+                 placeholder="admin@nobesick.com" />
+          @error('email') <p class="text-red-600">{{ $message }}</p> @enderror
         </div>
+      
         <div>
-          <label for="modal-password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
-          <div class="relative">
-            <input id="modal-password" :type="showPassword ? 'text':'password'" x-model="password" placeholder="••••••••"
-                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-soft-blue pr-12 transition"
-                   :class="errors.password ? 'border-red-300 focus:ring-red-200' : ''"/>
-            <button type="button" @click="showPassword = !showPassword"
-                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600">
-              <svg x-show="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-              </svg>
-              <svg x-show="showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242"/>
-              </svg>
-            </button>
-            <p x-show="errors.password" x-text="errors.password" class="text-red-600 text-sm mt-1"></p>
-          </div>
+          <label for="modal-password">Mot de passe</label>
+          <input id="modal-password" name="password" type="password" required
+                 class="w-full px-4 py-3 border rounded-xl"
+                 placeholder="••••••••" />
+          @error('password') <p class="text-red-600">{{ $message }}</p> @enderror
         </div>
-        <button type="submit" :disabled="loading"
-                class="w-full py-3 bg-gradient-to-r from-mustard to-yellow-500 text-white font-semibold rounded-xl hover:from-yellow-500 hover:to-mustard transition disabled:opacity-50 shadow-lg">
-          <span x-show="!loading">Se connecter</span>
-          <span x-show="loading" class="flex items-center justify-center">
-            <svg class="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
-            </svg>Connexion...
-          </span>
+      
+        <button type="submit"
+                class="w-full py-3 bg-gradient-to-r from-mustard to-yellow-500 text-white rounded-xl">
+          Se connecter
         </button>
-        <div class="text-center">
-          <a href="#" class="text-sm text-mustard hover:underline">Mot de passe oublié ?</a>
-        </div>
       </form>
+      
+    </div>
+  </div>
+
+  <!-- Registration Modal -->
+  <div x-show="showRegisterModal" x-cloak
+       x-transition:enter="animate-backdrop-appear" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+       x-transition:leave="transition-opacity duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+       @click.self="showRegisterModal = false">
+    <div x-show="showRegisterModal" x-cloak
+         x-transition:enter="animate-modal-appear" x-transition:leave="transition-all duration-200"
+         x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+         class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative"
+         x-data="registrationForm()">
+      <button @click="showRegisterModal=false"
+              class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 bg-white rounded-full p-1">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+      <!-- Success -->
+      <div x-show="success"
+           x-transition:enter="animate-fade-in"
+           x-transition:leave="transition-opacity duration-300"
+           class="mb-6 p-4 bg-green-100 text-green-800 rounded-lg animate-slide-up">
+        Inscription réussie, vous êtes désormais admin !
+      </div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Inscription Admin</h2>
+      <form action="{{ route('register.submit') }}" method="POST" class="space-y-6">
+        @csrf
+      
+        <div>
+          <label for="reg-name">Nom</label>
+          <input id="reg-name" name="name" type="text" required
+                 class="w-full px-4 py-3 border rounded-xl"
+                 placeholder="Votre nom" />
+          @error('name') <p class="text-red-600">{{ $message }}</p> @enderror
+        </div>
+      
+        <div>
+          <label for="reg-email">Email</label>
+          <input id="reg-email" name="email" type="email" required
+                 class="w-full px-4 py-3 border rounded-xl"
+                 placeholder="votre.email@exemple.com" />
+          @error('email') <p class="text-red-600">{{ $message }}</p> @enderror
+        </div>
+      
+        <div>
+          <label for="reg-pass">Mot de passe</label>
+          <input id="reg-pass" name="password" type="password" required
+                 class="w-full px-4 py-3 border rounded-xl"
+                 placeholder="••••••••" />
+          @error('password') <p class="text-red-600">{{ $message }}</p> @enderror
+        </div>
+      
+        <div>
+          <label for="reg-passc">Confirmez mot de passe</label>
+          <input id="reg-passc" name="password_confirmation" type="password" required
+                 class="w-full px-4 py-3 border rounded-xl"
+                 placeholder="••••••••" />
+        </div>
+      
+        <button type="submit"
+                class="w-full py-3 bg-gradient-to-r from-mustard to-yellow-500 text-white rounded-xl">
+          S’inscrire
+        </button>
+      </form>      
     </div>
   </div>
 
   <!-- Main content -->
   <main class="flex-grow pt-20 pb-16 relative floating-elements">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
       <!-- Hero -->
       <div class="text-center mb-16 animate-fade-in">
         <h1 class="text-5xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight">
@@ -216,67 +275,66 @@
       <section id="newsletter" class="mb-20">
         <div class="gradient-border max-w-5xl mx-auto">
           <div class="grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
-            <!-- Form -->
-            <div class="p-8 lg:p-12" x-data="{
-              email:'', submitted:false, loading:false, errors:{},
-              submit(){
-                this.errors={};
-                if(!this.email){ this.errors.email='Email requis'; return; }
-                if(!this.email.includes('@')||!this.email.includes('.')){
-                  this.errors.email='Format invalide'; return;
-                }
-                this.loading=true;
-                setTimeout(()=>{ this.submitted=true; this.loading=false },1200);
-              }
-            }">
-              <h2 class="text-4xl font-bold text-gray-800 mb-4">Newsletter <span class="text-mustard">NOBESICK</span></h2>
-              <p class="text-lg text-gray-600 mb-8">
-                Inscrivez-vous pour découvrir comment gérer vos rendez-vous, assurances et autres fonctionnalités de NOBESICK.
-              </p>
-              <template x-if="!submitted">
-                <form @submit.prevent="submit()" class="space-y-6 animate-slide-up">
-                  <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Adresse email *</label>
-                    <input id="email" type="email" x-model="email" required
-                           placeholder="votre.email@exemple.com"
-                           class="mt-1 w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-soft-blue transition"
-                           :class="errors.email?'border-red-300':''"/>
-                    <p x-show="errors.email" x-text="errors.email" class="text-red-600 text-sm mt-1"></p>
-                  </div>
-                  <button type="submit" :disabled="loading"
-                          class="w-full py-4 bg-gradient-to-r from-mustard to-yellow-500 text-white font-semibold rounded-xl hover:from-yellow-500 hover:to-mustard transition disabled:opacity-50">
-                    <span x-show="!loading">S'inscrire gratuitement</span>
-                    <span x-show="loading" class="flex items-center justify-center">
-                      <svg class="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
-                      </svg>En cours...
-                    </span>
-                  </button>
-                </form>
-              </template>
-              <template x-if="submitted">
-                <div class="text-center animate-slide-up">
+
+            <!-- Formulaire de connexion backend -->
+            <div class="p-8 lg:p-12">
+              @if(session('success'))
+                <div
+                  x-data="{ show: true }"
+                  x-init="setTimeout(() => show = false, 5000)"
+                  x-show="show"
+                  x-transition:enter="transition ease-out duration-300"
+                  x-transition:enter-start="opacity-0 transform scale-95"
+                  x-transition:enter-end="opacity-100 transform scale-100"
+                  class="text-center mb-8 animate-slide-up"
+                >
                   <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-soft-mustard to-mustard rounded-full animate-pulse-soft mx-auto mb-4">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
                   </div>
                   <h3 class="text-3xl font-bold text-gray-800 mb-2">Merci !</h3>
-                  <p class="text-gray-600">Vous recevrez bientôt nos contenus exclusifs.</p>
+                  <p class="text-gray-600">{{ session('success') }}</p>
                 </div>
-              </template>
+              @endif
+
+              <form action="{{ route('subscribe') }}" method="POST" class="space-y-6">
+                @csrf
+
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700">Adresse email *</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value="{{ old('email') }}"
+                    required
+                    placeholder="votre.email@exemple.com"
+                    class="mt-1 w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-soft-blue transition"
+                  >
+                  @error('email')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                  @enderror
+                </div>
+
+                <button
+                  type="submit"
+                  class="w-full py-4 bg-gradient-to-r from-mustard to-yellow-500 text-white font-semibold rounded-xl hover:from-yellow-500 hover:to-mustard transition"
+                >
+                  S’inscrire à la newsletter
+                </button>
+              </form>
             </div>
+
             <!-- Illustration sans overlay -->
             <div class="hidden lg:flex relative w-full h-[500px] overflow-hidden">
-              <!-- Image seule -->
               <img
                 src="img/image.jpeg"
                 alt="Santé et bien-être"
                 class="absolute inset-0 w-full h-full object-cover"
               />
-  >
-            </div>            
+            </div>
+
           </div>
         </div>
       </section>
@@ -295,7 +353,7 @@
             <div class="w-12 h-12 bg-gradient-to-r from-mustard to-yellow-500 rounded-xl mb-6 flex items-center justify-center">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>  
               </svg>
             </div>
             <h3 class="text-xl font-bold text-gray-800 mb-4">Gestion des rendez-vous</h3>
@@ -321,7 +379,7 @@
             <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-xl mb-6 flex items-center justify-center">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M11 3.055A9 9 0 1020.945 13H11V3.055z"/>
+                      d="M11 3.055A9 9 0 10 20.945 13H11V3.055z"/>
               </svg>
             </div>
             <h3 class="text-xl font-bold text-gray-800 mb-4">Analytique avancée</h3>
@@ -331,6 +389,7 @@
           </div>
         </div>
       </section>
+
     </div>
   </main>
 
@@ -376,14 +435,14 @@
           <li class="flex items-start space-x-3">
             <svg class="w-5 h-5 text-mustard mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 8l7.89 4.26…"/>
+                    d="M3 8l7.89 4.26…"/><!-- contact icon -->
             </svg>
             <span>contact@nobesick.com</span>
           </li>
           <li class="flex items-start space-x-3">
             <svg class="w-5 h-5 text-mustard mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17.657 16.657…"/>
+                    d="M17.657 16.657…"/><!-- location icon -->
             </svg>
             <span>Yaoundé, Cameroun</span>
           </li>
