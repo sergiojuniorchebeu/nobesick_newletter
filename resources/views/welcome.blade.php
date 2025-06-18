@@ -22,7 +22,8 @@
             'pastel-blue':  '#E8F4FD',
             'soft-blue':    '#B8E0F5',
             'mustard':      '#F4D03F',
-            'soft-mustard': '#F9E79F'
+            'soft-mustard': '#F9E79F',
+            'customred':    '#FF5B56'
           },
           fontFamily: {
             'poppins': ['Poppins','sans-serif']
@@ -97,6 +98,7 @@
       @include('welcome.hero')
       @include('welcome.newsletter')
       @include('welcome.about')
+      @include('welcome.pricing')
     </div>
   </main>
 
