@@ -30,11 +30,10 @@
                           focus:outline-none focus:ring-2 focus:ring-soft-blue transition" />
             @error('email') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
           </div>
-            <button type="submit"
-                class="w-full py-4 bg-customred  
-                   text-white font-semibold rounded-xl hover:bg-red-600 transition">
-            S’inscrire gratuitement
-            </button>
+          <button type="submit"
+                  class="w-full py-4 bg-customred text-white font-semibold rounded-xl hover:bg-red-600 transition">
+            S'inscrire gratuitement
+          </button>
         </form>
       </div>
       <div class="hidden lg:flex relative w-full h-[500px] overflow-hidden">
