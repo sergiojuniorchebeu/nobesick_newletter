@@ -19,18 +19,6 @@
       <p class="text-gray-600 leading-relaxed">Planifiez et suivez vos consultations en quelques clics.</p>
     </div>
 
-    <!-- Carte 2 -->
-    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
-      <div class="w-12 h-12 bg-gradient-to-r from-soft-blue to-blue-500 rounded-xl mb-6 flex items-center justify-center">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m2 0a2 2 0 012 2v4a2 2 0 01-2 2H7a2 2 0 01-2-2v-4a2 2 0 012-2m0-4V5a2 2 0 012-2h4a2 2 0 012 2v3"/>
-        </svg>
-      </div>
-      <h3 class="text-xl font-bold text-gray-800 mb-4">Assurance intégrée</h3>
-      <p class="text-gray-600 leading-relaxed">Gérez feuilles de soins et remboursements facilement.</p>
-    </div>
-
     <!-- Carte 3 -->
     <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
       <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-xl mb-6 flex items-center justify-center">
@@ -79,17 +67,6 @@
       <p class="text-gray-600 leading-relaxed">Nous vous reversons vos paiements via PayPal rapidement.</p>
     </div>
 
-    <!-- Carte 7 -->
-    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
-      <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl mb-6 flex items-center justify-center">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M9 20H4v-2a3 3 0 015.356-1.857M16 3.13a4 4 0 010 7.75M8 3.13a4 4 0 010 7.75" />
-        </svg>
-      </div>
-      <h3 class="text-xl font-bold text-gray-800 mb-4">Réseau médical</h3>
-      <p class="text-gray-600 leading-relaxed">Collaborez avec d'autres professionnels de santé reconnus.</p>
-    </div>
 
     <!-- Carte 8 -->
     <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
