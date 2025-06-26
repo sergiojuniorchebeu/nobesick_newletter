@@ -1,10 +1,15 @@
 <div class="relative overflow-hidden py-20 md:py-28 lg:py-32">
- <!-- Coming Soon Badge -->
- <div class="absolute top-8 left-8 z-20">
-   <div class="bg-gradient-to-r from-customred to-red-600 text-white px-6 py-3 rounded-full text-base font-bold shadow-lg animate-pulse">
-     Coming Soon
-   </div>
- </div>
+<!-- Coming Soon Badge -->
+<div class="absolute top-8 left-8 z-20">
+  <div class="bg-gradient-to-r from-customred to-red-600 
+              text-white px-8 py-4 font-extrabold uppercase tracking-wide 
+              shadow-xl animate-pulse 
+              [clip-path:polygon(0%_20%,85%_0%,100%_80%,15%_100%)]">
+    Coming Soon
+  </div>
+</div>
+
+
  
  <!-- Animated background elements -->
 <div class="absolute inset-0 z-0 overflow-hidden">

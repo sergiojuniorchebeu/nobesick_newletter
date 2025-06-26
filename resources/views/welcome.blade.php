@@ -29,11 +29,11 @@
             'poppins': ['Poppins','sans-serif']
           },
           animation: {
-            'float':         'float 3s ease-in-out infinite',
-            'pulse-soft':    'pulse 2s cubic-bezier(0.4,0,0.6,1) infinite',
-            'slide-up':      'slideUp 0.5s ease-out',
-            'fade-in':       'fadeIn 0.6s ease-out',
-            'modal-appear':  'modalAppear 0.3s ease-out',
+            'float':          'float 3s ease-in-out infinite',
+            'pulse-soft':     'pulse 2s cubic-bezier(0.4,0,0.6,1) infinite',
+            'slide-up':       'slideUp 0.5s ease-out',
+            'fade-in':        'fadeIn 0.6s ease-out',
+            'modal-appear':   'modalAppear 0.3s ease-out',
             'backdrop-appear':'backdropAppear 0.3s ease-out'
           }
         }
@@ -43,21 +43,21 @@
 
   <!-- Keyframes pour les animations -->
   <style>
-    @keyframes modalAppear { from { opacity: 0; transform: scale(.95) translateY(-10px); } to { opacity:1; transform: scale(1) translateY(0);} }
-    @keyframes backdropAppear { from { opacity:0; } to { opacity:1; } }
-    @keyframes float { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
-    @keyframes slideUp { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
-    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes modalAppear     { from { opacity: 0; transform: scale(.95) translateY(-10px); } to { opacity:1; transform: scale(1) translateY(0);} }
+    @keyframes backdropAppear  { from { opacity:0; } to { opacity:1; } }
+    @keyframes float           { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+    @keyframes slideUp         { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+    @keyframes fadeIn          { from { opacity:0; } to { opacity:1; } }
 
     [x-cloak] { display:none!important; }
-    body { font-family:'Poppins',sans-serif; scroll-behavior:smooth; }
-    header { transition: background-color .3s, opacity .3s; }
-    .glass-effect { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    body      { font-family:'Poppins',sans-serif; scroll-behavior:smooth; }
+    header    { transition: background-color .3s, opacity .3s; }
+    .glass-effect    { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
     .gradient-border { background: linear-gradient(45deg,#F4D03F,#B8E0F5); padding:2px; border-radius:12px; }
     .gradient-border > div { background:white; border-radius:10px; }
   </style>
 
-  <!-- Alpine.js + ton helper registrationForm() -->
+  <!-- Alpine.js + helper registrationForm() -->
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script>
     function registrationForm(){
@@ -106,13 +106,7 @@
   @include('welcome.footer')
   @include('welcome.scroll-to-top')
 
-  <!-- Script pour l’opacité du header au scroll -->
-  <script>
-    const header = document.querySelector('header');
-    window.addEventListener('scroll', () => {
-      header.classList.toggle('bg-white/50', window.scrollY > 50);
-      header.classList.toggle('bg-white/80', window.scrollY <= 50);
-    });
-  </script>
+  <!-- (Scroll script removed to keep header transparent en permanence) -->
+
 </body>
 </html>

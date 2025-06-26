@@ -22,6 +22,28 @@
 
         <form action="{{ route('subscribe') }}" method="POST" class="space-y-6">
           @csrf
+
+          <!-- Nom -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Nom *</label>
+            <input id="name" name="name" type="text" value="{{ old('name') }}" required
+                   placeholder="Votre nom"
+                   class="mt-1 w-full px-4 py-3 border-2 border-gray-200 rounded-xl 
+                          focus:outline-none focus:ring-2 focus:ring-soft-blue transition" />
+            @error('name') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+          </div>
+
+          <!-- Spécialité -->
+          <div>
+            <label for="speciality" class="block text-sm font-medium text-gray-700">Spécialité *</label>
+            <input id="speciality" name="speciality" type="text" value="{{ old('speciality') }}" required
+                   placeholder="Votre spécialité"
+                   class="mt-1 w-full px-4 py-3 border-2 border-gray-200 rounded-xl 
+                          focus:outline-none focus:ring-2 focus:ring-soft-blue transition" />
+            @error('speciality') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+          </div>
+
+          <!-- Email -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700">Adresse email *</label>
             <input id="email" name="email" type="email" value="{{ old('email') }}" required
@@ -30,12 +52,14 @@
                           focus:outline-none focus:ring-2 focus:ring-soft-blue transition" />
             @error('email') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
           </div>
+
           <button type="submit"
                   class="w-full py-4 bg-customred text-white font-semibold rounded-xl hover:bg-red-600 transition">
             S'inscrire gratuitement
           </button>
         </form>
       </div>
+
       <div class="hidden lg:flex relative w-full h-[500px] overflow-hidden">
         <img src="img/image.jpeg" alt="Santé et bien-être"
              class="absolute inset-0 w-full h-full object-cover" />
